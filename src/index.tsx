@@ -11,7 +11,11 @@ const theme = extendTheme({
   colors: {
     brand: {
       100: '#F6F6F6',
-      500: '#D3CCCC'
+      500: '#D3CCCC',
+      900: '#878484'
+    },
+    submit: {
+      300: '#37FACB'
     }
   },
   style: {
