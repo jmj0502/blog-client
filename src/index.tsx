@@ -1,13 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+
+//Theme overriding and color definitions. This doesn't kill the overall theme, but add custom things to it.
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: '#F6F6F6',
+      500: '#D3CCCC'
+    }
+  },
+  style: {
+    body: {
+      color: 'brand.100'
+    }
+  },
+  components: {
+    Link: {
+      baseStyle: {
+        _focus: {
+          boxShadow: 'none' 
+        }
+      }
+    }
+  }
+});
+
 ReactDOM.render(
   <React.StrictMode>
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <BrowserRouter>
           <App />
       </BrowserRouter>

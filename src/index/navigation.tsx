@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as ReactLink } from "react-router-dom";
-import { Heading, Flex, Button, Link } from "@chakra-ui/react";
+import { Heading, Flex, Button, Link, Spacer, Box } from "@chakra-ui/react";
 
 export type HeaderProps = {
   title: string;
@@ -15,30 +15,33 @@ export const Header = ({title}: HeaderProps) => {
       wrap="wrap"
       padding="1.5rem"
       color="white"
-      background="green"
+      background="brand.500"
     >
-      <Flex
-        align="center"
-        mr={5}
-      >
-		<Link as={ReactLink} to="/" >
-			<Heading
-			as="h1"
-			size="lg"
-			>
-			{title}
-			</Heading>
-		</Link> 
-      </Flex>
-      <Button
-        bg="transparent"
-        border="1px"
-      >
-        Add Feature
-      </Button>
-	  <Link as={ReactLink} to="/blog" >
-		  +
-	  </Link>
+      <Box>
+        <Link as={ReactLink} to="/" style={{textDecoration: 'none', paddingTop: '1px'}} >
+          <Heading
+            as="h1"
+            size="lg"
+            border="2px"
+            borderRadius="md"
+            padding="2"
+          >
+          {title}
+          </Heading>
+        </Link> 
+      </Box>
+      <Spacer />
+      <Box>
+        <Link 
+          as={ReactLink} 
+          to="/blog" 
+          style={{textDecoration: 'none'}}
+          fontWeight="bold"
+          fontSize="2xl"
+        >
+          +
+        </Link>
+      </Box>
     </Flex>
   )
 }
