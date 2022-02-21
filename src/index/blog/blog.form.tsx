@@ -9,7 +9,6 @@ import {
 	Heading,
 	Button,
 	Textarea,
-	Text,
 	Link
 } from "@chakra-ui/react";
 import {
