@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as ReactLink } from "react-router-dom";
 import { 
 	FormControl, 
 	Input, 
@@ -7,8 +7,14 @@ import {
 	Flex, 
 	Box,
 	Heading,
-	Button
+	Button,
+	Textarea,
+	Text,
+	Link
 } from "@chakra-ui/react";
+import {
+	ArrowBackIcon
+} from "@chakra-ui/icons";
 import { BlogContext } from "./blog.context";
 import { Blog } from "./blog.types";
 
@@ -27,7 +33,7 @@ export const BlogForm: React.FC<{}> = () => {
 		coverImg: /(http)(s)?\:\/\/[a-z0-9A-Z\.\/]{4,}/,
 	}
 
-	const onFormFieldChange = (e: React.FormEvent<HTMLInputElement>): void => {
+	const onFormFieldChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
 		setBlog({[e.currentTarget.name]: e.currentTarget.value})
 		setValidContent(formValidator[e.currentTarget.name].test(e.currentTarget.value));
 	}
@@ -45,7 +51,12 @@ export const BlogForm: React.FC<{}> = () => {
 	}
 
 	return (
-		<Flex direction="column" alignItems="center">
+		<Flex direction="column" alignItems="center" width="full" height="full">
+			<Flex direction="row" width="full">
+				<Link as={ReactLink} to="/">
+					<ArrowBackIcon marginTop="30px" marginLeft="30px" w="40px" h="31px" color="brand.1000"/>
+				</Link>
+			</Flex>
 			<Box>
 				<Heading 
 					as="h2"
@@ -56,22 +67,30 @@ export const BlogForm: React.FC<{}> = () => {
 				</Heading>
 			</Box>
 			<Box>
-				<FormControl width="container.md">
+				<FormControl width="container.md" marginTop="38px">
 					<form onSubmit={onFormSubmit}>
 						<FormLabel htmlFor="title" marginTop="1" fontSize="2xl">Title</FormLabel>
-						<Input type="text" name="title" onChange={onFormFieldChange}/>
-						<FormLabel htmlFor="coverImg" fontSize="2xl">Cover Image</FormLabel>
-						<Input type="text" name="coverImg" onChange={onFormFieldChange}/>
-						<FormLabel htmlFor="content" fontSize="2xl">Content</FormLabel>
-						<textarea name="content" />
-						<Button
-						  type="submit"
-						  background="submit.300"
-						  color="white"
-						  fontWeight="bold"
-						>
-							Create Post
-						</Button>
+						<Input type="text" name="title" onChange={onFormFieldChange} placeholder="Some awesome title!"/>
+						<FormLabel marginTop="13px" htmlFor="coverImg" fontSize="2xl">Cover Image</FormLabel>
+						<Input type="text" name="coverImg" onChange={onFormFieldChange} placeholder="E.G: http://exampleimg.com"/>
+						<FormLabel marginTop="13px" htmlFor="content" fontSize="2xl">Content</FormLabel>
+						<Textarea
+							name="content"
+							onChange={onFormFieldChange} 
+							placeholder="Add the content of your blog here!"
+						/>
+						<Flex direction="row-reverse" width="full">
+							<Button
+							type="submit"
+							background="submit.300"
+							color="white"
+							fontWeight="bold"
+							marginTop="13px"
+							alignSelf="end"
+							>
+								Create Post
+							</Button>
+						</Flex>
 					</form>
 				</FormControl>
 			</Box>

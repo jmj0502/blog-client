@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -12,7 +12,8 @@ const theme = extendTheme({
     brand: {
       100: '#F6F6F6',
       500: '#D3CCCC',
-      900: '#878484'
+      900: '#878484',
+      1000: '#878484'
     },
     submit: {
       300: '#37FACB'
