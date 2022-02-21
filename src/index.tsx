@@ -31,6 +31,13 @@ const theme = extendTheme({
           boxShadow: 'none' 
         }
       }
+    },
+    Button: {
+      baseStyle: {
+        _focus: {
+          boxShadow: 'none'
+        }
+      }
     }
   }
 });
