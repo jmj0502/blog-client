@@ -1,3 +1,3 @@
-import { createContext, Dispatch } from "react";
+import { createContext } from "react";
 
 export const BlogContext = createContext<any>({});

@@ -1,7 +1,6 @@
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import React, { ReactComponentElement, useState} from "react";
+import React, { useState } from "react";
 import { BlogContext } from "./blog.context";
-import { Blog, Author } from "./blog.types";
+import { Blog } from "./blog.types";
 
 export const BlogState = ({children}: any) => {
 	const [blogs, setBlogs] = useState<Partial<Blog[]>>([]);

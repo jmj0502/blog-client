@@ -1,6 +1,12 @@
 import React from "react";
 import { Link as ReactLink } from "react-router-dom";
-import { Heading, Flex, Button, Link, Spacer, Box } from "@chakra-ui/react";
+import { 
+  Heading, 
+  Flex, 
+  Link, 
+  Spacer, 
+  Box 
+} from "@chakra-ui/react";
 
 export type HeaderProps = {
   title: string;
