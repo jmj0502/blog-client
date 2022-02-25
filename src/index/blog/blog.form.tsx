@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/icons";
 import { BlogContext } from "./blog.context";
 import { Blog } from "./blog.types";
+import { CustomEditor } from "../components/editor";
 
 export const BlogForm: React.FC<{}> = () => {
 	let navigate = useNavigate();
@@ -78,6 +79,7 @@ export const BlogForm: React.FC<{}> = () => {
 							onChange={onFormFieldChange} 
 							placeholder="Add the content of your blog here!"
 						/>
+						<CustomEditor />
 						<Flex direction="row-reverse" width="full">
 							<Button
 							type="submit"
