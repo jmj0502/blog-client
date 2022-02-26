@@ -2,7 +2,9 @@ import React, { useCallback, useState } from "react";
 import {
 	Slate, 
 	Editable, 
-	withReact
+	withReact,
+	RenderElementProps,
+	RenderLeafProps
 } from "slate-react";
 import { 
 	BaseEditor, 
@@ -50,7 +52,6 @@ export const CustomEditor: React.FC<{}> = () => {
 
 	const boldCommand = (e: React.KeyboardEvent): void => {
 		e.preventDefault();
-		
 		console.log("bold")
 		//The logic contained on the match statement allows us to apply the changes to text nodes 
 		//and split them from the rest of the string if the selection is overlaping
@@ -85,7 +86,7 @@ export const CustomEditor: React.FC<{}> = () => {
 	//Slate allow us to basically provide other elements as props. 
 	//By doing so, we can provide the props of our elements to our top-most element
 	//and then pass every children to props as well.
-	const CodeBlock = (props: Element) => {
+	const CodeBlock = (props: RenderElementProps) => {
 		return (
 			<pre {...props.attributes} >
 				<code>{props.children}</code>
@@ -99,8 +100,8 @@ export const CustomEditor: React.FC<{}> = () => {
 		)
 	}
 
-	const Leaf = (props: any) => {
-		console.log(props.leaf)
+	const Leaf = (props: RenderLeafProps) => {
+		console.log(props.leaf.bold)
 		return (
 			<span
 				{...props.attributes}
