@@ -18,7 +18,7 @@ import { ReactEditor } from 'slate-react'
 import { Box } from "@chakra-ui/react";
 
 type CustomElement = { type: 'paragraph' | 'code'; children: CustomText[] };
-type CustomText = { text: string, bold: boolean };
+type CustomText = { text: string, bold?: boolean };
 
 declare module 'slate' {
   interface CustomTypes {
@@ -32,16 +32,30 @@ export const CustomEditor: React.FC<{}> = () => {
 
 	const initialValue: CustomElement[] = [{
 		type: 'paragraph',
-		children: [{text: 'Text', bold: false}]
+		children: [{text: 'Text'}]
 	}];
 	const [value, setValue] = useState<Descendant[]>(initialValue);
 	const [editor] = useState(() => withReact(createEditor()));
+
+	const isActiveMark = (editor: Editor, mark: string, children: boolean = false): boolean => {
+		if (children) {
+			const [match] = Editor.nodes(editor, {
+				match: (n: any) => n[mark] === true,
+				universal: true
+			});
+			return !!match;
+		}
+		const [match] = Editor.nodes(editor, {
+			match: (n: any) => n.type === mark
+		});
+		return !!match;
+	}
 
 	const codeCommand = (e: React.KeyboardEvent): void => {
 		//This will prevent us to insert the character we're using
 		//to trigger the command into the actual body of editor.
 		e.preventDefault();
-		const [match] = Editor.nodes(editor, {match: (n: any) => n.type === 'code'});
+		const match = isActiveMark(editor, 'code');
 		//Here we set the current selected block type to code.
 		Transforms.setNodes(
 			editor,
@@ -55,11 +69,12 @@ export const CustomEditor: React.FC<{}> = () => {
 		console.log("bold")
 		//The logic contained on the match statement allows us to apply the changes to text nodes 
 		//and split them from the rest of the string if the selection is overlaping
-		//a part of it.
+		// part of it.
+		const match = isActiveMark(editor, 'bold', true);
 		Transforms.setNodes(
 			editor,
-			{bold: true},
-			{match: (n: any) => Text.isText(n), split: true}
+			{bold: match ? undefined : true},
+			{match: (n: any) => n.text.length > -1, split: true}
 		);
 	}
 
@@ -132,7 +147,10 @@ export const CustomEditor: React.FC<{}> = () => {
 		<Slate 
 			editor={editor}
 			value={value}
-			onChange={(newValue) => setValue(newValue)} 
+			onChange={(newValue) => { 
+				console.log(JSON.stringify(newValue))
+				setValue(newValue)
+			}} 
 		>
 		<Box border="1px" borderRadius="5px">
 				<Editable 
