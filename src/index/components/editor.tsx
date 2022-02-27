@@ -12,32 +12,38 @@ import {
 	createEditor, 
 	Transforms, 
 	Editor,
-	Text 
+	Text,
+	Node,
+	BasePoint
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { Box } from "@chakra-ui/react";
+import {
+	CustomEditor as CurrenEditor,
+	HeadingElement,
+	ParagraphElement,
+	CustomText
+} from "./editor.types";
 
-type CustomElement = { type: 'paragraph' | 'code'; children: CustomText[] };
-type CustomText = { text: string, bold?: boolean };
 
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor
-    Element: CustomElement
+    Element: HeadingElement | ParagraphElement 
     Text: CustomText
   }
 }
 
 export const CustomEditor: React.FC<{}> = () => {
 
-	const initialValue: CustomElement[] = [{
+	const initialValue: Descendant[] = [{
 		type: 'paragraph',
 		children: [{text: 'Text'}]
 	}];
 	const [value, setValue] = useState<Descendant[]>(initialValue);
 	const [editor] = useState(() => withReact(createEditor()));
 
-	const isActiveMark = (editor: Editor, mark: string, children: boolean = false): boolean => {
+	const isActiveType = (editor: Editor, mark: string, children: boolean = false): boolean => {
 		if (children) {
 			const [match] = Editor.nodes(editor, {
 				match: (n: any) => n[mark] === true,
@@ -51,11 +57,25 @@ export const CustomEditor: React.FC<{}> = () => {
 		return !!match;
 	}
 
+	const isActiveMark = (editor: CurrenEditor, format: string): boolean => {
+		const marks: any = Editor.marks(editor);
+		return marks ? marks[format] === true : false;
+	}
+
+	const toggleMark = (editor: CurrenEditor, format: string): void => {
+		const activeMark = isActiveMark(editor, format);
+		if (activeMark) {
+			Editor.removeMark(editor, format);
+		} else {
+			Editor.addMark(editor, format, true);
+		}
+	}
+
 	const codeCommand = (e: React.KeyboardEvent): void => {
 		//This will prevent us to insert the character we're using
 		//to trigger the command into the actual body of editor.
 		e.preventDefault();
-		const match = isActiveMark(editor, 'code');
+		const match = isActiveType(editor, 'code');
 		//Here we set the current selected block type to code.
 		Transforms.setNodes(
 			editor,
@@ -66,15 +86,13 @@ export const CustomEditor: React.FC<{}> = () => {
 
 	const boldCommand = (e: React.KeyboardEvent): void => {
 		e.preventDefault();
-		console.log("bold")
-		//The logic contained on the match statement allows us to apply the changes to text nodes 
-		//and split them from the rest of the string if the selection is overlaping
-		// part of it.
-		const match = isActiveMark(editor, 'bold', true);
+		const match = isActiveType(editor, 'bold', true);
+		toggleMark(editor, 'bold');
+		
 		Transforms.setNodes(
 			editor,
 			{bold: match ? undefined : true},
-			{match: (n: any) => n.text.length > -1, split: true}
+			{match: (n, path) => Node.isNode(n) && Text.isText(n), split: true}
 		);
 	}
 
@@ -115,14 +133,17 @@ export const CustomEditor: React.FC<{}> = () => {
 		)
 	}
 
-	const Leaf = (props: RenderLeafProps) => {
-		console.log(props.leaf.bold)
+	const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
+		console.log(leaf)
+		if (leaf.bold === true) {
+			children = <strong>{children}</strong>
+		}
+
 		return (
 			<span
-				{...props.attributes}
-				style={{fontWeight: props.leaf.bold ? 'bold' : 'normal'}}
+				{...attributes}
 			>
-				{props.children}
+				{children}
 			</span>
 		)
 	}
@@ -153,13 +174,13 @@ export const CustomEditor: React.FC<{}> = () => {
 			}} 
 		>
 		<Box border="1px" borderRadius="5px">
-				<Editable 
-					onKeyDown={onKeyDown}
-					renderLeaf={leafRenderer}
-					renderElement={elementRenderer}
-					placeholder="write" style={{minHeight: "150px", resize: "vertical", overflow: "auto"}} 
-				/>
-			</Box>
+			<Editable 
+				onKeyDown={onKeyDown}
+				renderLeaf={leafRenderer}
+				renderElement={elementRenderer}
+				placeholder="write" style={{minHeight: "150px", resize: "vertical", overflow: "auto"}} 
+			/>
+		</Box>
 		</Slate>
 	);
 }
