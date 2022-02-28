@@ -14,7 +14,7 @@ import {
 	Editor,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import {
 	CustomEditor as CurrenEditor,
 	HeadingElement,
@@ -65,7 +65,10 @@ export const CustomEditor: React.FC<{}> = () => {
 	//they apply into our text.
 	const formatMap: Record<string, string> = {
 		'`': 'code',
-		'b': 'bold'
+		'b': 'bold',
+		'u': 'underline',
+		'i': 'italic',
+		's': 'strike'
 	}
 
 	//handling keydown events within our wysiwyg.
@@ -102,6 +105,18 @@ export const CustomEditor: React.FC<{}> = () => {
 				borderRadius: '5px',
 				color: '#fff'
 			}}>{children}</code>
+		}
+
+		if (leaf.underline) {
+			children = <Text as='u'>{children}</Text>
+		}
+
+		if (leaf.italic) {
+			children = <Text as='i'>{children}</Text>
+		}
+
+		if (leaf.strike) {
+			children = <Text as='s'>{children}</Text>
 		}
 
 		return (
