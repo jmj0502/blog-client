@@ -3,24 +3,25 @@ import {
 	Slate, 
 	Editable, 
 	withReact,
-	RenderElementProps,
-	RenderLeafProps
 } from "slate-react";
 import { 
 	BaseEditor, 
 	Descendant, 
 	createEditor, 
-	Transforms, 
-	Editor,
 } from 'slate'
 import { ReactEditor } from 'slate-react'
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import {
-	CustomEditor as CurrenEditor,
 	HeadingElement,
 	ParagraphElement,
 	CustomText
 } from "./editor.types";
+import {
+	formatMap,
+	triggerCommands,
+	Leaf,
+	DefaultBlock	
+} from "./editor.elements";
 
 
 declare module 'slate' {
@@ -40,37 +41,6 @@ export const CustomEditor: React.FC<{}> = () => {
 	const [value, setValue] = useState<Descendant[]>(initialValue);
 	const [editor] = useState(() => withReact(createEditor()));
 
-	const isActiveMark = (editor: CurrenEditor, format: string): boolean => {
-		const marks: any = Editor.marks(editor);
-		return marks ? marks[format] === true : false;
-	}
-
-	const toggleMark = (editor: CurrenEditor, format: string): void => {
-		const activeMark = isActiveMark(editor, format);
-		if (activeMark) {
-			Editor.removeMark(editor, format);
-		} else {
-			Editor.addMark(editor, format, true);
-		}
-	}
-
-	//An abstraction that will allow us to apply any kind of mark to any piece of code based on 
-	//the provided parameters. E.G: keyboardEvent, 'code' will trigger the code format.
-	const triggerCommands = (e: React.KeyboardEvent, format: string): void => {
-		e.preventDefault();
-		toggleMark(editor, format);
-	}
-
-	//This map will allow us to map the keys that tigger our commands with the respective format
-	//they apply into our text.
-	const formatMap: Record<string, string> = {
-		'`': 'code',
-		'b': 'bold',
-		'u': 'underline',
-		'i': 'italic',
-		's': 'strike'
-	}
-
 	//handling keydown events within our wysiwyg.
 	const onKeyDown = (e: React.KeyboardEvent): void => {
 		//On this function, we'll take advantage of slate keydown events to introduce
@@ -82,50 +52,8 @@ export const CustomEditor: React.FC<{}> = () => {
 
 		if (e.key in formatMap) {
 			const command = formatMap[e.key];	
-			triggerCommands(e, command);
+			triggerCommands(e, editor, command);
 		}
-			//keyMaps[e.key](e);
-	}
-
-	const DefaultBlock = (props: Element) => {
-		return (
-			<p {...props.attributes}>{props.children}</p>
-		)
-	}
-
-	const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
-		console.log(leaf)
-		if (leaf.bold) {
-			children = <strong>{children}</strong>
-		}
-
-		if (leaf.code) {
-			children = <code style={{
-				backgroundColor:'#adaba5', 
-				borderRadius: '5px',
-				color: '#fff'
-			}}>{children}</code>
-		}
-
-		if (leaf.underline) {
-			children = <Text as='u'>{children}</Text>
-		}
-
-		if (leaf.italic) {
-			children = <Text as='i'>{children}</Text>
-		}
-
-		if (leaf.strike) {
-			children = <Text as='s'>{children}</Text>
-		}
-
-		return (
-			<span
-				{...attributes}
-			>
-				{children}
-			</span>
-		)
 	}
 
 	//Here we'll define a rendering function based on the elements provided through props.
