@@ -8,7 +8,6 @@ import {
 	Box,
 	Heading,
 	Button,
-	Textarea,
 	Link
 } from "@chakra-ui/react";
 import {
@@ -74,11 +73,6 @@ export const BlogForm: React.FC<{}> = () => {
 						<FormLabel marginTop="13px" htmlFor="coverImg" fontSize="2xl">Cover Image</FormLabel>
 						<Input type="text" name="coverImg" onChange={onFormFieldChange} placeholder="E.G: http://exampleimg.com"/>
 						<FormLabel marginTop="13px" htmlFor="content" fontSize="2xl">Content</FormLabel>
-						<Textarea
-							name="content"
-							onChange={onFormFieldChange} 
-							placeholder="Add the content of your blog here!"
-						/>
 						<CustomEditor />
 						<Flex direction="row-reverse" width="full">
 							<Button

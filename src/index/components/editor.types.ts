@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { BaseEditor } from "slate";
 import { ReactEditor } from "slate-react";
 
@@ -21,4 +22,9 @@ export type HeadingElement = {
 	type: 'heading';
 	level: number;
 	children: CustomText[];
+}
+
+export type ToolBarIconProps = {	
+	format: string;
+	icon: ReactElement;
 }

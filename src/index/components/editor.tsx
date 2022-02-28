@@ -20,7 +20,8 @@ import {
 	formatMap,
 	triggerCommands,
 	Leaf,
-	DefaultBlock	
+	DefaultBlock,
+	Toolbar,
 } from "./editor.elements";
 
 
@@ -79,12 +80,24 @@ export const CustomEditor: React.FC<{}> = () => {
 				setValue(newValue)
 			}} 
 		>
-		<Box border="1px" borderRadius="5px">
+		<Toolbar />
+		<Box 
+			borderWidth="1px" 
+			borderRadius=" 0 0 5px 5px"
+			fontSize={"md"}
+			minHeight="150px"
+		>
 			<Editable 
 				onKeyDown={onKeyDown}
 				renderLeaf={leafRenderer}
 				renderElement={elementRenderer}
-				placeholder="write" style={{minHeight: "150px", resize: "vertical", overflow: "auto"}} 
+				placeholder="Blog Content" 
+				style={{
+					minHeight: "150px", 
+					resize: "vertical", 
+					overflow: "hidden",
+					padding: '0 16px 0 16px'
+				}} 
 			/>
 		</Box>
 		</Slate>

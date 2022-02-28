@@ -1,9 +1,17 @@
-import React, { useCallback } from "react";
+import React, { ReactElement } from "react";
 import { Editor } from "slate";
-import { RenderLeafProps } from "slate-react";
-import { Text } from "@chakra-ui/react";
+import { RenderLeafProps, useSlate } from "slate-react";
+import { HStack, IconButton, Text } from "@chakra-ui/react";
+import {
+	MdFormatBold,
+	MdFormatItalic,
+	MdFormatUnderlined,
+	MdFormatStrikethrough,	
+	MdCode
+} from "react-icons/md";
 import {
 	CustomEditor as CurrenEditor,
+	ToolBarIconProps
 } from "./editor.types";
 
 export const isActiveMark = (editor: CurrenEditor, format: string): boolean => {
@@ -75,5 +83,41 @@ export const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
 		>
 			{children}
 		</span>
+	)
+}
+
+const MarkButton: React.FC<ToolBarIconProps> = ({format, icon}: ToolBarIconProps) => {
+	const editor = useSlate();
+	return (
+		<IconButton
+			variant="outline"
+			colorScheme="blue"
+			isActive={isActiveMark(editor, format)}
+			onMouseDown={(event) => { 
+				event.preventDefault();
+				toggleMark(editor, format)
+			}}
+			aria-label={format}
+			icon={icon}
+			borderWidth={0}
+			fontSize={"25px"}
+		/>
+	)
+}
+
+export const Toolbar: React.FC<{}> = () => {
+	return (
+		<HStack
+			borderWidth={"0 0 1px 0"}
+			padding={"10px 5px"}
+			spacing={"5px"}
+			wrap={"wrap"}
+		>
+			<MarkButton format="bold" icon={<MdFormatBold />} />
+			<MarkButton format="italic" icon={<MdFormatItalic />} />
+			<MarkButton format="underline" icon={<MdFormatUnderlined />} />
+			<MarkButton format="strike" icon={<MdFormatStrikethrough />} />
+			<MarkButton format='code' icon={<MdCode />} />
+		</HStack>
 	)
 }
