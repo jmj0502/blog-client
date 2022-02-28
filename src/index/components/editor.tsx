@@ -12,9 +12,6 @@ import {
 	createEditor, 
 	Transforms, 
 	Editor,
-	Text,
-	Node,
-	BasePoint
 } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { Box } from "@chakra-ui/react";
@@ -43,20 +40,6 @@ export const CustomEditor: React.FC<{}> = () => {
 	const [value, setValue] = useState<Descendant[]>(initialValue);
 	const [editor] = useState(() => withReact(createEditor()));
 
-	const isActiveType = (editor: Editor, mark: string, children: boolean = false): boolean => {
-		if (children) {
-			const [match] = Editor.nodes(editor, {
-				match: (n: any) => n[mark] === true,
-				universal: true
-			});
-			return !!match;
-		}
-		const [match] = Editor.nodes(editor, {
-			match: (n: any) => n.type === mark
-		});
-		return !!match;
-	}
-
 	const isActiveMark = (editor: CurrenEditor, format: string): boolean => {
 		const marks: any = Editor.marks(editor);
 		return marks ? marks[format] === true : false;
@@ -71,35 +54,18 @@ export const CustomEditor: React.FC<{}> = () => {
 		}
 	}
 
-	const codeCommand = (e: React.KeyboardEvent): void => {
-		//This will prevent us to insert the character we're using
-		//to trigger the command into the actual body of editor.
+	//An abstraction that will allow us to apply any kind of mark to any piece of code based on 
+	//the provided parameters. E.G: keyboardEvent, 'code' will trigger the code format.
+	const triggerCommands = (e: React.KeyboardEvent, format: string): void => {
 		e.preventDefault();
-		const match = isActiveType(editor, 'code');
-		//Here we set the current selected block type to code.
-		Transforms.setNodes(
-			editor,
-			{type: match ? 'paragraph' : 'code'},
-			{match: (n: any) => Editor.isBlock(editor, n)}
-		);
+		toggleMark(editor, format);
 	}
 
-	const boldCommand = (e: React.KeyboardEvent): void => {
-		e.preventDefault();
-		const match = isActiveType(editor, 'bold', true);
-		toggleMark(editor, 'bold');
-		
-		Transforms.setNodes(
-			editor,
-			{bold: match ? undefined : true},
-			{match: (n, path) => Node.isNode(n) && Text.isText(n), split: true}
-		);
-	}
-
-	//This will map will allow us to deliver our keyboard commands on demmand.
-	const keyMaps: Record<string, CallableFunction> = {
-		'`': codeCommand,
-		'b': boldCommand,
+	//This map will allow us to map the keys that tigger our commands with the respective format
+	//they apply into our text.
+	const formatMap: Record<string, string> = {
+		'`': 'code',
+		'b': 'bold'
 	}
 
 	//handling keydown events within our wysiwyg.
@@ -111,20 +77,11 @@ export const CustomEditor: React.FC<{}> = () => {
 		}
 		console.log(e.key)
 
-		if (e.key in keyMaps) 
-			keyMaps[e.key](e);
-	}
-
-	//Defining custom elements to render inside our wysiwyg.
-	//Slate allow us to basically provide other elements as props. 
-	//By doing so, we can provide the props of our elements to our top-most element
-	//and then pass every children to props as well.
-	const CodeBlock = (props: RenderElementProps) => {
-		return (
-			<pre {...props.attributes} >
-				<code>{props.children}</code>
-			</pre>
-		)
+		if (e.key in formatMap) {
+			const command = formatMap[e.key];	
+			triggerCommands(e, command);
+		}
+			//keyMaps[e.key](e);
 	}
 
 	const DefaultBlock = (props: Element) => {
@@ -135,8 +92,16 @@ export const CustomEditor: React.FC<{}> = () => {
 
 	const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
 		console.log(leaf)
-		if (leaf.bold === true) {
+		if (leaf.bold) {
 			children = <strong>{children}</strong>
+		}
+
+		if (leaf.code) {
+			children = <code style={{
+				backgroundColor:'#adaba5', 
+				borderRadius: '5px',
+				color: '#fff'
+			}}>{children}</code>
 		}
 
 		return (
@@ -152,8 +117,6 @@ export const CustomEditor: React.FC<{}> = () => {
 	//In this particular case, we'll use the useCallback hook to memoize the function for subsequent redings.
 	const elementRenderer = useCallback((props) => {
 		switch (props.element.type) {
-			case 'code':
-				return <CodeBlock {...props}/>
 			default:
 				return <DefaultBlock {...props}/>
 		}	

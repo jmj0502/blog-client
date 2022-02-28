@@ -9,6 +9,7 @@ export type CustomText = {
 	italic?: boolean;
 	underline?: boolean;
 	strike?: boolean;
+	code?: boolean;
 };
 
 export type ParagraphElement = {
