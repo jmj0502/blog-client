@@ -1,6 +1,12 @@
 import React, { ReactElement } from "react";
-import { Editor } from "slate";
-import { RenderLeafProps, useSlate } from "slate-react";
+import { 
+	Editor, Element as SlateElement, Transforms
+} from "slate";
+import { 
+	RenderLeafProps, 
+	Slate, 
+	useSlate 
+} from "slate-react";
 import { HStack, IconButton, Text } from "@chakra-ui/react";
 import {
 	MdFormatBold,
@@ -14,14 +20,56 @@ import {
 	ToolBarIconProps
 } from "./editor.types";
 
+const listsBlocks = ['numbered-list', 'bulleted-list'];
+
+
+//As isActiveMark allow us to check if a specific mark is active in order to apply a 
+//certain style to a leaf, this logic will allow us to check if a specific format
+//has been set into a block.
+export const isActiveBlock = (editor: CurrenEditor, format: string): boolean => {
+	const { selection } = editor;
+	if (!selection) return false;
+
+	const [match] = Array.from(
+		Editor.nodes(
+			editor,{
+				at: Editor.unhangRange(editor, selection),
+				match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format
+			}
+		)
+	);
+
+	return !!match;
+}
+
+export const toggleBlock = (editor: CurrenEditor, format: string): void => {
+	const isActive = isActiveBlock(editor, format);
+	const isList = listsBlocks.includes(format);
+
+	Transforms.unwrapNodes(editor, {
+		match: n => !Editor.isEditor(n) && SlateElement.isElement(n) && listsBlocks.includes(n.type),
+		split: true
+	});
+
+	const newProperties: Partial<SlateElement> = {
+		type: isActive ? "paragraph" : isList ? "list-item" : format
+	}
+
+	Transforms.setNodes(editor, newProperties);
+	if (!isActive && isList) {
+		const block = { type: format, children: [] };
+		Transforms.wrapNodes(editor, block);
+	}
+}
+
 export const isActiveMark = (editor: CurrenEditor, format: string): boolean => {
 	const marks: any = Editor.marks(editor);
 	return marks ? marks[format] === true : false;
 }
 
 export const toggleMark = (editor: CurrenEditor, format: string): void => {
-	const activeMark = isActiveMark(editor, format);
-	if (activeMark) {
+	const isActive = isActiveMark(editor, format);
+	if (isActive) {
 		Editor.removeMark(editor, format);
 	} else {
 		Editor.addMark(editor, format, true);

@@ -14,7 +14,7 @@ export type CustomText = {
 };
 
 export type ParagraphElement = {
-	type: 'paragraph' | 'code';
+	type: 'paragraph' | 'code' | 'list-item' | string;
 	children: CustomText[];
 };
 
