@@ -4,15 +4,21 @@ import {
 } from "slate";
 import { 
 	RenderLeafProps, 
+	RenderElementProps,
 	Slate, 
 	useSlate 
 } from "slate-react";
-import { HStack, IconButton, Text } from "@chakra-ui/react";
+import { Heading, HStack, IconButton, ListItem, OrderedList, Text, UnorderedList } from "@chakra-ui/react";
 import {
 	MdFormatBold,
 	MdFormatItalic,
 	MdFormatUnderlined,
 	MdFormatStrikethrough,	
+	MdFormatListBulleted,
+	MdFormatListNumbered,
+	MdFormatQuote,
+	MdLooksOne,
+	MdLooksTwo,
 	MdCode
 } from "react-icons/md";
 import {
@@ -99,6 +105,33 @@ export const DefaultBlock = (props: Element) => {
 	)
 }
 
+export const Block = ({attributes, children, element}: RenderElementProps) => {
+	switch (element.type) {
+		case 'numbered-list':
+			return <OrderedList {...attributes}>{children}</OrderedList>
+		case 'bulleted-list':
+			return <UnorderedList {...attributes}>{children}</UnorderedList>
+		case 'list-item':
+			return <ListItem {...attributes}>{children}</ListItem>
+		case 'quotation':
+			return <blockquote 
+						style={{
+							marginLeft: "2px",
+							paddingLeft: "10px",
+							borderLeft: "3px solid #98c6e3"
+						}}
+						{...attributes}
+					>{children}</blockquote>
+		case 'heading-one': 
+			return <Heading as='h1' size='3xl' {...attributes}>{children}</Heading>
+		case 'heading-two':
+			return <Heading as='h2' {...attributes}>{children}</Heading>
+		default:
+			return <p {...attributes}>{children}</p>
+	}
+
+} 
+
 export const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
 	console.log(leaf)
 	if (leaf.bold) {
@@ -134,6 +167,25 @@ export const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
 	)
 }
 
+const BlockButton: React.FC<ToolBarIconProps> = ({format, icon}: ToolBarIconProps) => {
+	const editor = useSlate();
+	return (
+		<IconButton
+			variant="outline"
+			colorScheme="blue"
+			isActive={isActiveBlock(editor, format)}
+			onMouseDown={(event) => { 
+				event.preventDefault();
+				toggleBlock(editor, format)
+			}}
+			aria-label={format}
+			icon={icon}
+			borderWidth={0}
+			fontSize={"25px"}
+		/>
+	)
+}
+
 const MarkButton: React.FC<ToolBarIconProps> = ({format, icon}: ToolBarIconProps) => {
 	const editor = useSlate();
 	return (
@@ -166,6 +218,11 @@ export const Toolbar: React.FC<{}> = () => {
 			<MarkButton format="underline" icon={<MdFormatUnderlined />} />
 			<MarkButton format="strike" icon={<MdFormatStrikethrough />} />
 			<MarkButton format='code' icon={<MdCode />} />
+			<BlockButton format="heading-one" icon={<MdLooksOne />} />
+			<BlockButton format="heading-two" icon={<MdLooksTwo />} />
+			<BlockButton format="quotation" icon={<MdFormatQuote />} />
+			<BlockButton format="numbered-list" icon={<MdFormatListNumbered/>} />
+			<BlockButton format="bulleted-list" icon={<MdFormatListBulleted/>} />
 		</HStack>
 	)
 }

@@ -21,6 +21,7 @@ import {
 	triggerCommands,
 	Leaf,
 	DefaultBlock,
+	Block,
 	Toolbar,
 } from "./editor.elements";
 
@@ -62,7 +63,7 @@ export const CustomEditor: React.FC<{}> = () => {
 	const elementRenderer = useCallback((props) => {
 		switch (props.element.type) {
 			default:
-				return <DefaultBlock {...props}/>
+				return <Block {...props}/>
 		}	
 	}, [])
 
