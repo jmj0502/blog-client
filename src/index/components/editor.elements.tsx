@@ -121,7 +121,9 @@ export const Block = ({attributes, children, element}: RenderElementProps) => {
 							borderLeft: "3px solid #98c6e3"
 						}}
 						{...attributes}
-					>{children}</blockquote>
+					>
+						{children}
+					</blockquote>
 		case 'heading-one': 
 			return <Heading as='h1' size='3xl' {...attributes}>{children}</Heading>
 		case 'heading-two':
