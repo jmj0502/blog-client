@@ -1,6 +1,18 @@
-import { Box, Button, Container, Text } from "@chakra-ui/react";
 import React from "react";
-import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from "react-google-login";
+import { 
+	Button, 
+	Center, 
+	Flex, 
+	Heading, 
+	Text 
+} from "@chakra-ui/react";
+import { 
+	GoogleLoginResponse, 
+	GoogleLoginResponseOffline, 
+	useGoogleLogin 
+} from "react-google-login";
+import GoogleLogo from "../../assets/google-logo.svg";
+import BlogLogo from "../../assets/Default.svg";
 
 export const Login: React.FC<{}> = () => {
 	
@@ -16,30 +28,53 @@ export const Login: React.FC<{}> = () => {
 		console.log(res);
 		console.log("///// Error While Logging in ////");
 	}
-	
+
 	const googleClientID: string = `${process.env.REACT_APP_GOOGLE_ID}`;
 
+	const {signIn} = useGoogleLogin({
+		onSuccess,
+		onFailure,
+		clientId: googleClientID
+	});
+	
+
 	return (
-		<Container
-			centerContent	
+		<Center
+			height="85vh"
+			width="full"
+			bg="gray.100"
 		>
-			<Box 
-				borderWidth="1px" 
-				borderRadius="lg"
-				padding="5px"
+			<Flex
+				bg="white"
+				direction="column"
+				width="30%"
+				borderWidth="1px"
+				borderRadius="5px"
+				height="40%"
+				textAlign="center"
+				justifyContent="space-evenly"
+				boxShadow="md"
 			>
-				<Text>Sign In with Google</Text>
-				<GoogleLogin
-				style={{
-					padding: "7px",
-					borderRadius: "50px" 
-				}}
-				onSuccess={onSuccess}
-				onFailure={onFailure}
-				clientId={googleClientID}
-				cookiePolicy={"single_host_origin"}
+				<img 
+					src={BlogLogo} 
+					alt="Logo" 
+					style={{
+						height:"20%",
+						marginBottom: "5px"
+					}}
 				/>
-			</Box>
-		</Container>
+				<Heading as="h4">Welcome!</Heading>
+				<Text>If you are ready to start spreading ideas, experiences and knowledge...</Text>
+				<Button 
+					style={{
+						marginRight: "5px",
+						marginLeft: "5px",
+					}}
+					onClick={signIn}
+				>
+					Sign In <img src={GoogleLogo} style={{height: "25px"}} alt="Google Logo"/> 
+				</Button>
+			</Flex>
+		</Center>
 	)
 }
