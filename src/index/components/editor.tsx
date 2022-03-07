@@ -87,6 +87,7 @@ export const CustomEditor: React.FC<{}> = () => {
 			borderRadius=" 0 0 5px 5px"
 			fontSize={"md"}
 			minHeight="150px"
+			bg="white"
 		>
 			<Editable 
 				onKeyDown={onKeyDown}
@@ -95,6 +96,7 @@ export const CustomEditor: React.FC<{}> = () => {
 				placeholder="Blog Content" 
 				style={{
 					minHeight: "150px", 
+					height: "150px",
 					resize: "vertical", 
 					overflow: "hidden",
 					padding: '0 16px 0 16px'

@@ -19,8 +19,9 @@ import {
 	MdFormatQuote,
 	MdLooksOne,
 	MdLooksTwo,
-	MdCode
+	MdCode,
 } from "react-icons/md";
+import { DiCodeBadge } from "react-icons/di";
 import {
 	CustomEditor as CurrenEditor,
 	ToolBarIconProps
@@ -128,6 +129,18 @@ export const Block = ({attributes, children, element}: RenderElementProps) => {
 			return <Heading as='h1' size='3xl' {...attributes}>{children}</Heading>
 		case 'heading-two':
 			return <Heading as='h2' {...attributes}>{children}</Heading>
+		case 'code':
+			return <code style={{
+						backgroundColor:'#d4d4d4', 
+						borderRadius: '5px',
+						color: '#636363',
+						fontFamily: 'monospace',
+						paddingLeft: "2px",
+						paddingRight: "2px"
+					}}
+					>
+						{children}
+					</code> 
 		default:
 			return <p {...attributes}>{children}</p>
 	}
@@ -142,9 +155,12 @@ export const Leaf = ({attributes, children, leaf}: RenderLeafProps) => {
 
 	if (leaf.code) {
 		children = <code style={{
-			backgroundColor:'#adaba5', 
+			backgroundColor:'#d4d4d4', 
 			borderRadius: '5px',
-			color: '#fff'
+			color: '#636363',
+			fontFamily: 'monospace',
+			paddingLeft: "2px",
+			paddingRight: "2px"
 		}}>{children}</code>
 	}
 
@@ -225,6 +241,7 @@ export const Toolbar: React.FC<{}> = () => {
 			<BlockButton format="quotation" icon={<MdFormatQuote />} />
 			<BlockButton format="numbered-list" icon={<MdFormatListNumbered/>} />
 			<BlockButton format="bulleted-list" icon={<MdFormatListBulleted/>} />
+			<BlockButton format="code" icon={<DiCodeBadge />} />
 		</HStack>
 	)
 }
