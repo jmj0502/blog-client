@@ -25,7 +25,7 @@ export async function setAuth(url: string, authInfo: GoogleLoginResponse): Promi
 			"Content-Type": "Application/JSON"
 		},
 		body: JSON.stringify({
-			token: authInfo
+			token: authInfo.tokenId
 		})
 	});
 	const {user: {email, id}, token}: AuthResponse = await response.json();

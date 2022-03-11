@@ -13,14 +13,13 @@ import {
 } from "react-google-login";
 import GoogleLogo from "../../assets/google-logo.svg";
 import BlogLogo from "../../assets/Default.svg";
+import { setAuth } from "./login.request";
 
 export const Login: React.FC<{}> = () => {
 	
 	const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline): void => {
-		console.log("///// Google Response /////");
 		const response = res as GoogleLoginResponse;
-		console.log(JSON.stringify(response.profileObj));
-		console.log("///// Google Response /////");
+		setAuth(`${process.env.REACT_APP_API}api/auth/sign-up`, response);
 	}
 
 	const onFailure = (res: any): void => {
