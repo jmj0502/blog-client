@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { 
 	Button, 
 	Center, 
@@ -11,11 +11,15 @@ import {
 	GoogleLoginResponseOffline, 
 	useGoogleLogin 
 } from "react-google-login";
+import { LoginContext } from "./login.context";
 import GoogleLogo from "../../assets/google-logo.svg";
 import BlogLogo from "../../assets/Default.svg";
-import { setAuth } from "./login.request";
 
 export const Login: React.FC<{}> = () => {
+
+	const {
+		setAuth
+	} = useContext(LoginContext); 
 	
 	const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline): void => {
 		const response = res as GoogleLoginResponse;
