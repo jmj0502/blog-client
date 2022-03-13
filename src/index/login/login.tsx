@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
+	useToast,
 	Button, 
 	Center, 
 	Flex, 
 	Heading, 
-	Text 
+	Text,
+	Spinner
 } from "@chakra-ui/react";
 import { 
 	GoogleLoginResponse, 
@@ -17,13 +20,29 @@ import BlogLogo from "../../assets/Default.svg";
 
 export const Login: React.FC<{}> = () => {
 
+	const [isLoading, setLoading] = useState(false);
 	const {
 		setAuth
 	} = useContext(LoginContext); 
+
+	const navigate = useNavigate();
+	const toast = useToast();
 	
-	const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline): void => {
+	const onSuccess = async (res: GoogleLoginResponse | GoogleLoginResponseOffline): Promise<void | any> => {
+		setLoading(true);
 		const response = res as GoogleLoginResponse;
-		setAuth(`${process.env.REACT_APP_API}api/auth/sign-up`, response);
+		const success = await setAuth(`${process.env.REACT_APP_API}api/auth/sign-up`, response);
+		setLoading(false);
+		if (!success) {
+			return toast({
+				title: "Something went wrong!",
+				description: "Couldn't sign-in, please try again later.",
+				status: 'error',
+				duration: 3000,
+				isClosable: true
+			});
+		}
+		navigate("/");
 	}
 
 	const onFailure = (res: any): void => {
@@ -68,15 +87,21 @@ export const Login: React.FC<{}> = () => {
 				/>
 				<Heading as="h4">Welcome!</Heading>
 				<Text>If you are ready to start spreading ideas, experiences and knowledge...</Text>
-				<Button 
-					style={{
-						marginRight: "5px",
-						marginLeft: "5px",
-					}}
-					onClick={signIn}
-				>
-					Sign In <img src={GoogleLogo} style={{height: "25px"}} alt="Google Logo"/> 
-				</Button>
+				{isLoading ? 
+					<Center>
+						<Spinner size="lg" />  
+					</Center>
+					: 
+					<Button 
+						style={{
+							marginRight: "5px",
+							marginLeft: "5px",
+						}}
+						onClick={signIn}
+					>
+						Sign In <img src={GoogleLogo} style={{height: "25px"}} alt="Google Logo"/> 
+					</Button> 
+				}
 			</Flex>
 		</Center>
 	)

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, Link as ReactLink } from "react-router-dom";
 import { 
 	FormControl, 
@@ -14,18 +14,31 @@ import {
 	ArrowBackIcon
 } from "@chakra-ui/icons";
 import { BlogContext } from "./blog.context";
+import { LoginContext } from "../login/login.context";
 import { Blog } from "./blog.types";
+import { LoggedUser } from "../login/login.types";
 import { CustomEditor } from "../components/editor";
 
 export const BlogForm: React.FC<{}> = () => {
 	let navigate = useNavigate();
-
+	
 	const {
 		createBlog	
 	} = useContext(BlogContext);
 
-	const [blog, setBlog] = useState<Partial<Blog>>({} as Partial<Blog>);
+	const {
+		getCurrentUser	
+	} = useContext(LoginContext);
+
+	const [currentUser, setCurrentUser] = useState<LoggedUser>();
+	const [blog, setBlog] = useState<Partial<Blog>>({authorId: currentUser?.id} as Partial<Blog>);
 	const [validContent, setValidContent] = useState(false);
+
+
+	useEffect(() => {
+		setCurrentUser(getCurrentUser());
+	}, [currentUser])
+
 
 	const formValidator: Record<string, RegExp> = {
 		title: /[a-zA-z\s]{5,}/,

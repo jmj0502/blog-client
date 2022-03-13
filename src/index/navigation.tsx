@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { 
   Heading, 
@@ -7,12 +7,29 @@ import {
   Spacer, 
   Box 
 } from "@chakra-ui/react";
+import { LoginContext } from "./login/login.context";
+import { LoggedUser } from "./login/login.types";
 
 export type HeaderProps = {
   title: string;
 }
 
 export const Header = ({title}: HeaderProps) => {
+  const [isLoggedIn, setIsLoggetIn] = useState<LoggedUser>();
+
+  const {
+    getCurrentUser
+  } = useContext(LoginContext);
+
+  useEffect(() => {
+    setIsLoggetIn(getCurrentUser());
+    console.log("LoggedIn");
+    console.log(isLoggedIn);
+    console.log("LoggedIn");
+  },[]);
+
+  
+
   return (
     <Flex
       as="nav"
@@ -38,7 +55,7 @@ export const Header = ({title}: HeaderProps) => {
       </Box>
       <Spacer />
       <Box>
-        <Link 
+        {isLoggedIn && (<Link 
           as={ReactLink} 
           to="/blog" 
           style={{textDecoration: 'none'}}
@@ -46,7 +63,7 @@ export const Header = ({title}: HeaderProps) => {
           fontSize="2xl"
         >
           +
-        </Link>
+        </Link>)}
       </Box>
     </Flex>
   )

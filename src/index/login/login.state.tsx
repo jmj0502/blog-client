@@ -8,22 +8,34 @@ import {
 
 export const LoginState = ({children}: any) => {
 
-	async function setAuth(url: string, authInfo: GoogleLoginResponse): Promise<void> {
-		const response = await fetch(url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "Application/JSON"
-			},
-			body: JSON.stringify({
-				token: authInfo.tokenId
-			})
-		});
-		const {user: {email, id}, token}: AuthResponse = await response.json();
-		localStorage.setItem("currentUser", JSON.stringify({
-			email,
-			id,
-			token
-		}));
+	async function setAuth(url: string, authInfo: GoogleLoginResponse): Promise<boolean> {
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "Application/JSON"
+				},
+				body: JSON.stringify({
+					token: authInfo.tokenId
+				})
+			});
+	
+			if (response.status !== 200) {
+				return false;
+			}
+	
+			const {user: {email, id}, token}: AuthResponse = await response.json();
+			localStorage.setItem("currentUser", JSON.stringify({
+				email,
+				id,
+				token
+			}));
+	
+			return true;
+		} catch(err) {
+			console.log("error");
+			return false;
+		}
 	} 
 
 	function getCurrentUser(): LoggedUser | null {

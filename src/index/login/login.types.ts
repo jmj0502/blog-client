@@ -1,5 +1,3 @@
-import { GoogleLoginResponse } from "react-google-login";
-
 type User = {
 	email: string;
 	id: number;
