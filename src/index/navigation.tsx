@@ -15,20 +15,10 @@ export type HeaderProps = {
 }
 
 export const Header = ({title}: HeaderProps) => {
-  const [isLoggedIn, setIsLoggetIn] = useState<LoggedUser>();
 
   const {
-    getCurrentUser
+    isLoggedUser
   } = useContext(LoginContext);
-
-  useEffect(() => {
-    setIsLoggetIn(getCurrentUser());
-    console.log("LoggedIn");
-    console.log(isLoggedIn);
-    console.log("LoggedIn");
-  },[]);
-
-  
 
   return (
     <Flex
@@ -55,7 +45,7 @@ export const Header = ({title}: HeaderProps) => {
       </Box>
       <Spacer />
       <Box>
-        {isLoggedIn && (<Link 
+        {isLoggedUser && (<Link 
           as={ReactLink} 
           to="/blog" 
           style={{textDecoration: 'none'}}

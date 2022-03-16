@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import {
 	Slate, 
 	Editable, 
@@ -34,7 +34,11 @@ declare module 'slate' {
   }
 }
 
-export const CustomEditor: React.FC<{}> = () => {
+interface IEditorProps {
+	setContent: Dispatch<SetStateAction<string>> 
+}
+
+export const CustomEditor: React.FC<IEditorProps> = ({ setContent }: IEditorProps) => {
 
 	const initialValue: Descendant[] = [{
 		type: 'paragraph',
@@ -79,6 +83,7 @@ export const CustomEditor: React.FC<{}> = () => {
 			onChange={(newValue) => { 
 				console.log(JSON.stringify(newValue))
 				setValue(newValue)
+				setContent(JSON.stringify(value))
 			}} 
 		>
 		<Toolbar />

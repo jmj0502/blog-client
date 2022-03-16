@@ -31,13 +31,14 @@ export const BlogForm: React.FC<{}> = () => {
 	} = useContext(LoginContext);
 
 	const [currentUser, setCurrentUser] = useState<LoggedUser>();
-	const [blog, setBlog] = useState<Partial<Blog>>({authorId: currentUser?.id} as Partial<Blog>);
+	const [content, setContent] = useState<string>("");
+	const [blog, setBlog] = useState<Partial<Blog>>({} as Partial<Blog>);
 	const [validContent, setValidContent] = useState(false);
 
 
 	useEffect(() => {
 		setCurrentUser(getCurrentUser());
-	}, [currentUser])
+	}, [])
 
 
 	const formValidator: Record<string, RegExp> = {
@@ -46,16 +47,18 @@ export const BlogForm: React.FC<{}> = () => {
 	}
 
 	const onFormFieldChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-		setBlog({[e.currentTarget.name]: e.currentTarget.value})
+		setBlog({...blog, [e.currentTarget.name]: e.currentTarget.value})
 		setValidContent(formValidator[e.currentTarget.name].test(e.currentTarget.value));
 	}
 
 	const onFormSubmit = async (e: React.SyntheticEvent): Promise<void> => {
 		e.preventDefault();
-		
+		setBlog({...blog, content, authorId: currentUser?.id as number});	
+
+		console.log(blog);
 		if (!validContent) return;
 
-		const result = await createBlog("api/blog/", blog);
+		const result = await createBlog("api/blog/", blog, currentUser?.token as string);
 		if (result.success) {
 			console.log("SUCCESS");
 			navigate("/");
@@ -104,7 +107,7 @@ export const BlogForm: React.FC<{}> = () => {
 							bg="white"
 						/>
 						<FormLabel marginTop="13px" htmlFor="content" fontSize="2xl">Content</FormLabel>
-						<CustomEditor />
+						<CustomEditor setContent={setContent}/>
 						<Flex direction="row-reverse" width="full">
 							<Button
 							type="submit"

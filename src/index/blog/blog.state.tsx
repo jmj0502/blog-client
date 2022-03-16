@@ -16,11 +16,12 @@ export const BlogState = ({children}: any) => {
 		return blogsData;
 	}
 
-	const createBlog = async (endpoint: string, blogData: Omit<Blog, "id" | "author">): Promise<Record<string, boolean | Blog>> => {
+	const createBlog = async (endpoint: string, blogData: Omit<Blog, "id" | "author">, token: string): Promise<Record<string, boolean | Blog>> => {
 		const responsePromise = await fetch(`${process.env.REACT_APP_API}${endpoint}`, {
 			method: "POST",
 			headers: {
-				"Content-Type": "Application/JSON"
+				"Content-Type": "Application/JSON",
+				"Authorization": `Bearer ${token}`
 			},
 			body: JSON.stringify(blogData)
 		});

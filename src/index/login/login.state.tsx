@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LoginContext } from "./login.context";
 import { GoogleLoginResponse } from "react-google-login";
 import {
@@ -7,6 +7,13 @@ import {
 } from "./login.types";
 
 export const LoginState = ({children}: any) => {
+	const [isLoggedUser, setIsLoggedUser] = useState<boolean>(false);
+
+	useEffect(() => {
+		const user = getCurrentUser();
+		if (user)
+			setIsLoggedUser(true);
+	}, [])
 
 	async function setAuth(url: string, authInfo: GoogleLoginResponse): Promise<boolean> {
 		try {
@@ -30,6 +37,7 @@ export const LoginState = ({children}: any) => {
 				id,
 				token
 			}));
+			setIsLoggedUser(true);
 	
 			return true;
 		} catch(err) {
@@ -48,6 +56,7 @@ export const LoginState = ({children}: any) => {
 		<LoginContext.Provider
 		value={{
 			setAuth,
+			isLoggedUser,
 			getCurrentUser
 		}}
 		>
