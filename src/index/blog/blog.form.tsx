@@ -71,7 +71,6 @@ export const BlogForm: React.FC<{}> = () => {
 			alignItems="center" 
 			width="full" 
 			height="full"
-			bg="gray.100"
 		>
 			<Flex direction="row" width="full">
 				<Link as={ReactLink} to="/">

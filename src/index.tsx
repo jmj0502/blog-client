@@ -21,7 +21,7 @@ const theme = extendTheme({
   },
   style: {
     body: {
-      color: 'brand.100'
+      bg: 'brand.100'
     }
   },
   components: {

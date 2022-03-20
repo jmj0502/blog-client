@@ -13,7 +13,7 @@ export const LoginState = ({children}: any) => {
 		const user = getCurrentUser();
 		if (user)
 			setIsLoggedUser(true);
-	}, [])
+	}, []);
 
 	async function setAuth(url: string, authInfo: GoogleLoginResponse): Promise<boolean> {
 		try {

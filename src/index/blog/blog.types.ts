@@ -5,6 +5,7 @@ export interface Blog {
 	content: string;
 	authorId: number;
 	author: Author;
+	cratedAt: Date;
 }
 
 export interface Author {

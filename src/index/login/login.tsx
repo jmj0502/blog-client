@@ -64,7 +64,6 @@ export const Login: React.FC<{}> = () => {
 		<Center
 			height="85vh"
 			width="full"
-			bg="gray.100"
 		>
 			<Flex
 				bg="white"
