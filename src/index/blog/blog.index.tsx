@@ -4,9 +4,11 @@ import {
 	Flex, 
 	Heading, 
 	Image,
+	Text
 } from "@chakra-ui/react";
 import { BlogContext } from "./blog.context";
 import { Blog } from "./blog.types";
+import { DateTime } from "luxon";
 
 export const BlogList: React.FC<{}> = () => {
 	const {
@@ -33,38 +35,60 @@ export const BlogList: React.FC<{}> = () => {
 			>
 			</Flex>
 			<Flex 
-				width="30%"
+				width="35%"
 				direction="column"
 			>
 				{
-					//blogs.forEach((el: Partial<Blog>) => console.log(el))
-					//blogs.posts.map((el: Blog)=> console.log(el))
 					blogs.map((blog: Partial<Blog>) => {
-						console.log(blog);
 						return (
 							<Flex 
+								key={blog.id}
 								width="100%"
+								height="60%"
 								direction="column" 
 								marginTop="10px"
 								borderRadius="5px"
 								borderWidth="1px"	
-								justifyContent="center"
 								boxShadow="md"
 								bg="white"
 							>
 								<Image 
 									src={blog.coverImg} 
-									alt="coverImage" 
-									height="200px"
-									width="600px"
+									alt={blog.title} 
+									height="60%"
+									width="100%"
+									borderTopRadius="5px"
 								/>
-								<Box
+								<Flex
 									padding="5px"
 								>
-									<Heading size="lg">{blog.title}</Heading>
-								</Box>
+									<Box>
+										<Image 
+											src={blog.author?.profilePic}
+											height="52px"
+											width="52px"
+											borderRadius="50%"
+											marginLeft="20px"
+										/>
+									</Box>
+									<Box
+										marginLeft="15px"
+										color="brand.200"
+									>
+										<Heading 
+											size="lg"
+											color="#000"
+										>
+												{blog.title}
+										</Heading>
+										<Text>Author: {blog.author?.fullName}</Text>
+										<Text>
+											{`${DateTime.fromISO(blog.createdAt as string).toLocaleString({...DateTime.DATE_FULL})}`}
+										</Text>
+									</Box>
+								</Flex>
 							</Flex>
-						) 
+						); 
 					})
 				}
 			</Flex>

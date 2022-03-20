@@ -17,7 +17,9 @@ function App() {
           <Routes>
             <Route index element={<BlogList />} />  
             <Route path="login" element={<Login />} />
-            <Route path="blog" element={<BlogForm />} />
+            <Route path="blog" element={<BlogForm />}>
+              <Route path="update/:id" element={<BlogForm />} />
+            </Route>
           </Routes>
         </BlogState>
       </LoginState>

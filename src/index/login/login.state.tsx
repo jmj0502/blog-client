@@ -35,7 +35,8 @@ export const LoginState = ({children}: any) => {
 			localStorage.setItem("currentUser", JSON.stringify({
 				email,
 				id,
-				token
+				token,
+				profilePic: authInfo.profileObj.imageUrl
 			}));
 			setIsLoggedUser(true);
 	

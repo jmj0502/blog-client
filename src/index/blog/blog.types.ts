@@ -5,10 +5,12 @@ export interface Blog {
 	content: string;
 	authorId: number;
 	author: Author;
-	cratedAt: Date;
+	createdAt: string;
 }
 
 export interface Author {
 	id: number;
 	email: string;
+	profilePic: string;
+	fullName: string;
 }
