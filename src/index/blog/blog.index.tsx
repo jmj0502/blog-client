@@ -23,7 +23,7 @@ export const BlogList: React.FC<{}> = () => {
 
 	useEffect(() => {
 		getBlogsData();
-	}, [])
+	}, []);
 
 	return ( 
 		<>
