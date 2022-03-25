@@ -54,6 +54,15 @@ export const Header = ({title}: HeaderProps) => {
         >
           +
         </Link>)}
+        {!isLoggedUser && (<Link
+          as={ReactLink}
+          to="/login" 
+          style={{textDecoration: 'none'}}
+          fontWeight="bold"
+          fontSize="2xl"
+        >
+          Sign In
+        </Link>)}
       </Box>
     </Flex>
   )

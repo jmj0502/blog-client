@@ -1,19 +1,39 @@
-import React, { useState } from "react";
+import React, { 
+	useContext, 
+	useState 
+} from "react";
 import { BlogContext } from "./blog.context";
 import { Blog } from "./blog.types";
+import { LoginContext } from "../login/login.context";
+import { LoggedUser } from "../login/login.types";
 
 export const BlogState = ({children}: any) => {
-	const [blogs, setBlogs] = useState<Partial<Blog[]>>([]);
 
-	const getBlogs = async (endpoint: string): Promise<Partial<Blog[]>> => {
-		console.log("ROUTE")
-		console.log(`${process.env.REACT_APP_API}${endpoint}`);
-		console.log("ROUTE")
-		const blogsPromise = await fetch(`${process.env.REACT_APP_API}${endpoint}`, {
+	const {
+		getCurrentUser
+	} = useContext(LoginContext);
+
+	const [blogs, setBlogs] = useState<Partial<Blog[]>>([]);
+	const [blog, setBlog] = useState<Partial<Blog>>({});
+
+	const getBlogs = async (): Promise<Partial<Blog[]>> => {
+		const blogsPromise = await fetch(`${process.env.REACT_APP_API}api/blog/`, {
 			method: "GET"	
 		});
 		const blogsData: Partial<Blog[]> = await blogsPromise.json();
 		return blogsData;
+	}
+	
+	const getBlog = async (id: number): Promise<Partial<Blog>> => {
+		const user: LoggedUser = getCurrentUser();
+		const blogPromise = await fetch(`${process.env.REACT_APP_API}api/blog/${id}`, {
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${user.token}`
+			}	
+		});
+		const blogData: Partial<Blog> = await blogPromise.json();
+		return blogData;
 	}
 
 	const createBlog = async (endpoint: string, blogData: Omit<Blog, "id" | "author">, token: string): Promise<Record<string, boolean | Blog>> => {
@@ -33,8 +53,11 @@ export const BlogState = ({children}: any) => {
 		<BlogContext.Provider
 		value={{
 			blogs, 
-			setBlogs, 
+			setBlogs,
 			getBlogs,
+			blog,
+			setBlog,
+			getBlog,
 			createBlog
 		}}
 		>
