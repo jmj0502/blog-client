@@ -19,7 +19,7 @@ function App() {
             <Route index element={<BlogList />} />  
             <Route path="login" element={<Login />} />
             <Route path="blog" element={<BlogForm />} />
-            <Route path="blog/:blogId" element={<Blog />}/>
+            <Route path="read/:blogId" element={<Blog />}/>
           </Routes>
         </BlogState>
       </LoginState>

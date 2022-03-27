@@ -26,6 +26,7 @@ export const BlogState = ({children}: any) => {
 	
 	const getBlog = async (id: number): Promise<Partial<Blog>> => {
 		const user: LoggedUser = getCurrentUser();
+		console.log("RUNING");
 		const blogPromise = await fetch(`${process.env.REACT_APP_API}api/blog/${id}`, {
 			method: "GET",
 			headers: {

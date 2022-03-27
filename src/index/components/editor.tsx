@@ -20,7 +20,6 @@ import {
 	formatMap,
 	triggerCommands,
 	Leaf,
-	DefaultBlock,
 	Block,
 	Toolbar,
 } from "./editor.elements";
