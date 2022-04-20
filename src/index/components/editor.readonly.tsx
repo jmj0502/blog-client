@@ -38,7 +38,10 @@ interface IReadonlyEditorProps {
 
 export const ReadonlyEditor: React.FC<IReadonlyEditorProps> = ({ content }: IReadonlyEditorProps) => {
 
+	//let initialValue = [{"type":"paragraph","children":[{"text":"Text "}]}];
+	//if (content) {
 	const initialValue = JSON.parse(content);
+	//}
 	const [value, setValue] = useState<Descendant[]>(initialValue);
 	const [editor] = useState(() => withReact(createEditor()));
 

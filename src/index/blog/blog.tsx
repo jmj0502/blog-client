@@ -20,17 +20,19 @@ export const Blog: React.FC<{}> =  () => {
 		const blog = await getBlog(blogId);
 		console.log("FIRED");
 		setBlog(blog.post);
+		console.log("///// Contenido /////")
+		console.log(blog.content);
+		console.log("///// Contenido /////")
 	}
 
 	useEffect(() => {
 		console.log("Test")
-		if (isCurrent) {
+		try {
 			getBlogData(parseInt(blogId));
+		} catch(err) {
+			console.log("FAAAAACKKKKKKKK")
 		}
-		return () => {
-			isCurrent = false;
-		}
-	}, [blog])
+	}, [])
 
 	const {
 		getBlog
@@ -50,7 +52,7 @@ export const Blog: React.FC<{}> =  () => {
 				bg={"red"}
 				margin="auto"
 			>
-				<p>;-/</p>
+				{blog && (<ReadonlyEditor content={blog?.content ? blog?.content : ''}/>)}
 			</Center>
 		</Flex>
 	)

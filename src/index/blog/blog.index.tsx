@@ -46,7 +46,7 @@ export const BlogList: React.FC<{}> = () => {
 				direction="column"
 			>
 				{
-					blogs.map((blog: Partial<Blog>) => {
+					blogs && (blogs.map((blog: Partial<Blog>) => {
 						return (
 							<Flex 
 								key={blog.id}
@@ -68,7 +68,7 @@ export const BlogList: React.FC<{}> = () => {
 								/>
 								<Link
 									as={ReactLink}
-									to={`blog/${blog.id}`}
+									to={`read/${blog.id}`}
 									style={{textDecoration: 'none'}}
 								>
 									<Flex
@@ -102,7 +102,7 @@ export const BlogList: React.FC<{}> = () => {
 								</Link>
 							</Flex>
 						); 
-					})
+					}))
 				}
 			</Flex>
 			<Flex 
